@@ -15,7 +15,17 @@ object Recursion extends App {
     factHelper(n, 1)
   }
 
-  println(anotherFactorial(5000))
+//  println(anotherFactorial(5000))
+
+  // WHEN YOU NEED LOOPS, USE __TAIL__ RECURSION.
+
+  /*
+  1. Concatenate a string n times
+  2. isPrime function tail recursive
+  3. Fibonacci function, tail recursive
+   */
+
+
 
 
 }
