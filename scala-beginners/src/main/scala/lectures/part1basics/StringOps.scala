@@ -40,6 +40,10 @@ object StringOps extends App {
 
   println(myth)
 
+  // raw-interpolator
+  println(raw"This is a \n newline")
+
+
 
 
 
