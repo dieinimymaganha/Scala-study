@@ -9,21 +9,33 @@ object Objects extends App {
     val N_EYES = 2
 
     def canFly: Boolean = false
+// Factory method
+    def apply(mother: Person, father: Person): Person = new Person("Bobbie")
   }
 
 
-  class Person {
+  class Person(val name : String) {
     // instance-level functionality
   }
 
   println(Person.N_EYES)
-//  println(Person.canFly)
+  //  println(Person.canFly)
 
 
   // Scala object = SINGLETON INSTANCE
-  val mary = Person
-  val john = Person
+  val mary = new Person("Mary")
+  val john = new Person("Jhon")
 
   println(s"isEqual? ${mary == john}")
+
+  val person1 = Person
+  val person2 = Person
+
+  println(s"Person is Equal? ${person1 == person2}")
+
+  val bobbie = Person.apply(mary, john)
+
+  // Scala applications = Scala object with
+  // def main(args: Array[String]): Unit
 
 }
