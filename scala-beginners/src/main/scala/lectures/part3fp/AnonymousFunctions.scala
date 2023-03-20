@@ -23,7 +23,7 @@ object AnonymousFunctions extends App {
   // MOAR syntactic sugar
   val niceIncrement: Int => Int =  _ + 1 // equivalent to x => x + 1
   val niceAdder: (Int, Int) => Int = _ + _ // equivalent to (a, b) => a + b
-  
+
 
 
 
