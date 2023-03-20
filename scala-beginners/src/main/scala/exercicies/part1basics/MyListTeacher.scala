@@ -128,9 +128,9 @@ object ListTest extends App {
   println(listOfString.toString)
 
 
-  println(listOfIntegers.map(elem => elem * 2).toString)
+  println(listOfIntegers.map(_ * 2).toString)
 
-  println(listOfIntegers.filter(elem => elem % 2 == 0).toString)
+  println(listOfIntegers.filter(_ % 2 == 0).toString)
 
 
   println((listOfIntegers ++ anotherListOfIntegers).toString)
