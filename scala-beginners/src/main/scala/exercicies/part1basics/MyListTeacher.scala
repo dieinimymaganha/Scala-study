@@ -15,6 +15,7 @@ abstract class MyListTeacher[+A] {
   def printElements: String
 
   override def toString: String = "[" + printElements + "]"
+
   // higher-order functions
   def map[B](transformer: A => B): MyListTeacher[B]
 
@@ -24,6 +25,15 @@ abstract class MyListTeacher[+A] {
 
   def ++[B >: A](list: MyListTeacher[B]): MyListTeacher[B]
 
+  // hofs
+  def foreEach(f: A => Unit): Unit
+
+  def sort(compare: (A, A) => Int): MyListTeacher[A]
+
+
+  def zipWith[B, C](list: MyListTeacher[B], zip: (A, B) => C): MyListTeacher[C]
+
+  def fold[B](start: B)(operator: (B, A) => B): B
 }
 
 
@@ -46,6 +56,17 @@ case object Empty extends MyListTeacher[Nothing] {
   def filter(predicate: Nothing => Boolean): MyListTeacher[Nothing] = Empty
 
   def ++[B >: Nothing](list: MyListTeacher[B]): MyListTeacher[B] = list
+
+  // hofs
+  def foreEach(f: Nothing => Unit): Unit = ()
+
+  def sort(compare: (Nothing, Nothing) => Int) = Empty
+
+  def zipWith[B, C](list: MyListTeacher[B], zip: (Nothing, B) => C): MyListTeacher[C] =
+    if (!list.isEmpty) throw new RuntimeException("List do not have the same lenght")
+    else Empty
+
+  def fold[B](start: B)(operator: (B, Nothing) => B): B = start
 }
 
 case class Cons[+A](h: A, t: MyListTeacher[A]) extends MyListTeacher[A] {
@@ -100,6 +121,34 @@ case class Cons[+A](h: A, t: MyListTeacher[A]) extends MyListTeacher[A] {
   def flatMap[B](transformer: A => MyListTeacher[B]): MyListTeacher[B] =
     transformer(h) ++ t.flatMap(transformer)
 
+  // hofs
+
+  def foreEach(f: A => Unit): Unit = {
+    f(h)
+    t.foreEach(f)
+  }
+
+  def sort(compare: (A, A) => Int): MyListTeacher[A] = {
+
+    def insert(x: A, sortedList: MyListTeacher[A]): MyListTeacher[A] =
+      if (sortedList.isEmpty) new Cons(x, Empty)
+      else if (compare(x, sortedList.head) <= 0) new Cons(x, sortedList)
+      else new Cons(sortedList.head, insert(x, sortedList.tail))
+
+    val sortedTail = t.sort(compare)
+    insert(h, sortedTail)
+
+  }
+
+  def zipWith[B, C](list: MyListTeacher[B], zip: (A, B) => C): MyListTeacher[C] =
+    if (list.isEmpty) throw new RuntimeException("Lists do not have the same length")
+    else new Cons(zip(h, list.head), t.zipWith(list.tail, zip))
+
+  def fold[B](start: B)(operator: (B, A) => B): B = {
+    t.fold(operator(start, h))(operator)
+
+
+  }
 
 
 }
@@ -113,9 +162,6 @@ case class Cons[+A](h: A, t: MyListTeacher[A]) extends MyListTeacher[A] {
 //
 //}
 //
-
-
-
 
 
 object ListTest extends App {
@@ -135,8 +181,17 @@ object ListTest extends App {
 
   println((listOfIntegers ++ anotherListOfIntegers).toString)
 
-  println(listOfIntegers.flatMap(elem => new Cons(elem, new Cons(elem + 1 , Empty))).toString)
+  println(listOfIntegers.flatMap(elem => new Cons(elem, new Cons(elem + 1, Empty))).toString)
 
   println(cloneListOfIntegers == listOfIntegers)
+
+  listOfIntegers.foreEach(println)
+
+  println(listOfIntegers.sort((x, y) => y - x))
+
+  println(anotherListOfIntegers.zipWith[String, String](listOfString, _ + "-" + _))
+
+  println(listOfIntegers.fold(0)(_ + _))
+
 
 }
