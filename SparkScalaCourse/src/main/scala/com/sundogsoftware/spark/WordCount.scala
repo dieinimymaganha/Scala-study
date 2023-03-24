@@ -16,10 +16,13 @@ object WordCount {
     val input = sc.textFile("data/book.txt")
 
     // Split into words separated by a space character
-    val words = input.flatMap(x => x.split(" "))
+    val words = input.flatMap(x => x.split("\\W+"))
+
+    // Normalize everything to lowercase
+    val lowerCasesWords = words.map(x => x.toLowerCase())
 
     // Count up the occurrences of each word
-    val wordCounts = words.countByValue()
+    val wordCounts = lowerCasesWords.countByValue()
 
     // Print the results
     wordCounts.foreach(println)
