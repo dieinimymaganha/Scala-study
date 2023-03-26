@@ -38,7 +38,7 @@ object WordCountBetterSortedDataset {
     // Show the results
     wordCountsSorted.show(wordCountsSorted.count.toInt)
 
-    
+
   }
 
 }
