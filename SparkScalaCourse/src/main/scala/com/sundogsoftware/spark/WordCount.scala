@@ -21,12 +21,23 @@ object WordCount {
     // Normalize everything to lowercase
     val lowerCasesWords = words.map(x => x.toLowerCase())
 
-    // Count up the occurrences of each word
-    val wordCounts = lowerCasesWords.countByValue()
+    // Count of the occurrences of each word
+    val wordCounts = lowerCasesWords.map(x => (x, 1)).reduceByKey((x, y) => x + y)
+
+
+    // Flib (word, count) tuples to (count, word) and then sort by key (the counts)
+    val wordCountsSorted = wordCounts.map(x => (x._2, x._1)).sortByKey()
 
     // Print the results
-    wordCounts.foreach(println)
+    //    wordCountsSorted.foreach(println)
 
+
+    // Print the results
+    for (result <- wordCountsSorted) {
+      val count = result._1
+      val word = result._2
+      println(s"$word: $count")
+    }
 
   }
 
